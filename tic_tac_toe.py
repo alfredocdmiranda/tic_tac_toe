@@ -2,7 +2,16 @@ class Table(object):
     def __init__(self, size):
         self.width = size
         self.heigth = size
+        self.size = size
         self.state = [[None for j in range(size)] for i in range(size)]
+
+    def full(self):
+        for x in self.state:
+            for p in x:
+                if p is None:
+                    return False
+
+        return True
 
     def play(self, x, y, sym):
         if self.state[x][y] is None:
@@ -37,6 +46,51 @@ class Player(object):
 def judge(table):
     result = 0
 
+    #Vertical
+    if result == 0:
+        for i in range(table.size):
+            l = []
+            for x in table.state:
+                l.append(x[i])
+
+            s = set(l)
+            if len(s) == 1 and s.pop() is not None:
+                result = 1
+                break
+
+    #Horizontal
+    if result == 0:
+        for x in table.state:
+            s = set(x)
+            if len(s) == 1 and s.pop() is not None:
+                result = 1
+                break
+
+    #Diagonal 1
+    if result == 0:
+        l = []
+        for i in range(table.size):
+            l.append(table.state[i][i])
+
+        s = set(l)
+        if len(s) == 1 and s.pop() is not None:
+            result = 1
+
+    #Diagonal 2
+    if result == 0:
+        l = []
+        for i in range(table.size):
+            l.append(table.state[i][table.size-1-i])
+
+        s = set(l)
+        if len(s) == 1 and s.pop() is not None:
+            result = 1
+
+    #Draw
+    if result == 0:
+        if table.full():
+            result = 2
+
     return result
 
 if __name__ == '__main__':
@@ -46,7 +100,9 @@ if __name__ == '__main__':
     while True:
         x = int(input('X: '))
         y = int(input('Y: '))
-        t.play(x,y,players[turn].sym)
+        if not t.play(x,y,players[turn].sym):
+            #Invalid
+            continue
         result = judge(t)
         if result > 0:
             break

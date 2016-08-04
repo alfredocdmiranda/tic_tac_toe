@@ -57,9 +57,10 @@ class Comp(Player):
         for m in moves:
             new_move = self.copy_table(cp_table)
             new_move.state[m[0]][m[1]] = self.sym
-            moves[m] = self.minimax(new_move,self.sym)
+            moves[m] = self.minimax(new_move,self.op_sym)
 
         sorted_moves = sorted(moves, key=lambda x: moves[x], reverse=True)
+        print(moves)
         return sorted_moves[0]
 
     def minimax(self, table, curr_player):

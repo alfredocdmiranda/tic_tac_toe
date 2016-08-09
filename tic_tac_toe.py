@@ -53,24 +53,26 @@ class Comp(Player):
     def evaluate(self, table):
         cp_table = self.copy_table(table)
         moves = self.possible_moves(cp_table)
-
-        for m in moves:
-            new_move = self.copy_table(cp_table)
-            new_move.state[m[0]][m[1]] = self.sym
-            moves[m] = self.minimax(new_move,self.op_sym)
-
-        sorted_moves = sorted(moves, key=lambda x: moves[x], reverse=True)
         print(moves)
+        for i in range(len(moves)):
+            for m in moves:
+                new_move = self.copy_table(cp_table)
+                new_move.state[m[0]][m[1]] = self.sym
+                moves[m] = self.minimax(new_move,self.op_sym,i)
+
+            sorted_moves = sorted(moves, key=lambda x: moves[x], reverse=True)
+            if moves[sorted_moves[0]] > 0:
+                break
         return sorted_moves[0]
 
-    def minimax(self, table, curr_player):
+    def minimax(self, table, curr_player, level):
         result = self.judge(table)
         if result == 1:
             if curr_player == self.op_sym:
                 return 10
             else:
                 return -10
-        elif result == 2:
+        elif result == 2 or level == 0:
             return 0
 
         moves = self.possible_moves(table)
@@ -78,7 +80,7 @@ class Comp(Player):
         for m in moves:
             new_move = self.copy_table(table)
             new_move.state[m[0]][m[1]] = curr_player
-            moves[m] = self.minimax(new_move,sym)
+            moves[m] = self.minimax(new_move,sym, level-1)
 
         return sum(moves.values())
 

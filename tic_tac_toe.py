@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 class Table(object):
     def __init__(self, size):
         self.width = size
@@ -203,20 +205,24 @@ if __name__ == '__main__':
     t = Table(3)
     players = [Player('P1', 'x'), Comp('P2', 'o', 'x')]
     turn = 0
+    result = 0
     while True:
         if isinstance(players[turn],Comp):
             x,y = players[turn].evaluate(t)
         else:
             x = int(input('X: '))
             y = int(input('Y: '))
+
         if not t.play(x,y,players[turn].sym):
             #Invalid
             continue
+
         result = judge(t)
-        if result > 0:
-            break
+        os.system('clear') #Clear screen
         print(t)
         print("-----------------------------")
+        if result > 0:
+            break
         turn = 1 if turn == 0 else 0
 
     if result == 1: #WIN
